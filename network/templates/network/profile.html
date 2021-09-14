@@ -8,18 +8,23 @@
     <br>
     This is {{username}}'s profile page
     <br>
+    <b>Followers:</b>
     {% for follower in followers %}
         {{follower|linebreaks}}
         <br>
     {% endfor %}
-    <br>
+    <br><br>
     {% for Post in Posts %}
         {{Post|linebreaks}}
         <br>
     {% endfor %}
     {% if is_user == 0 %}
-        <button type = "button" id = "follow_btn"></button>
+        <button type = "button" id = "follow_btn">{{btn_text}}</button>
     {% endif %}
+    
+    {{followers}}
+    {{active_user}}
+    {{btn_text}}
     <input type="hidden" id="username" value ={{username}} >
     <input type="hidden" id="fol_id" value ={{profile_id}} >
     <script src="{% static 'network/profile.js' %}"></script>

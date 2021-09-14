@@ -106,6 +106,10 @@ def get_profile(request,username):
     profile_id = User.objects.filter(username = username).get().id
     active_user = request.user
     followers = User.objects.get(username = username).followers.all()
+    if active_user in followers:
+        btn_text = "Unfollow"
+    else:
+        btn_text = "Follow"
     if str(active_user) == str(username):
         is_user = 1
     else: 
@@ -115,7 +119,9 @@ def get_profile(request,username):
         "profile_id": profile_id,
         "Posts": Posts,
         "is_user": is_user,
-        "followers": followers
+        "followers": followers,
+        "btn_text": btn_text,
+        "active_user": active_user
     })
 
 @login_required(login_url = '/login')
