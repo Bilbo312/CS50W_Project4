@@ -1,0 +1,1 @@
+When creating post redirect to index in views don't do the whole form/posts again

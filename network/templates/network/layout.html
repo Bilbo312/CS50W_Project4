@@ -24,7 +24,7 @@
                 </li>
                 {% if user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Following</a>
+                        <a class="nav-link" href="{% url 'following_posts' %}">Following</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
@@ -42,11 +42,6 @@
           </nav>
         
         <div class="body">
-            <!--<form action="{% url 'create_post'%}" method="post">
-                {% csrf_token %}
-                {{ form.Post_content }}
-                <input class="submit-btn" type="submit" value="Submit" style="left: 445px; margin-top: 60px;"/>
-            </form>-->
             {% block body %}
             {% endblock %}
         </div>

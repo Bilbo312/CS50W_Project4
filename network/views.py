@@ -161,3 +161,15 @@ def followers(request, username):
                 'no_followers': no_followers,
                 "followers": followers
             })
+
+@login_required
+def following_posts(request):
+    followed_users = list(User.objects.filter(followers = request.user).values_list('id', flat=True))
+    followed_users_2 = list(User.objects.filter(followers = request.user).values_list('username', flat=True))
+    Posts = Post.objects.filter(post_creator__in = followed_users)
+    Posts = Posts.order_by("-time_created").all()
+    return render(request, "network/following.html", {
+        "Posts": Posts,
+        "following":followed_users,
+        "followed_users_2": followed_users_2
+    })
