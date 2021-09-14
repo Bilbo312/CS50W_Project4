@@ -1,0 +1,15 @@
+{% extends "network/layout.html" %}
+
+{% block body %}
+    <div class="body">
+        <form action="{% url 'create_post'%}" method="post">
+            {% csrf_token %}
+            {{ form.Post_content }}
+            <input class="submit-btn" type="submit" value="Submit" style="left: 445px; margin-top: 60px;"/>
+        </form>
+    </div>
+    {% for Post in Posts %}
+        {{Post|linebreaks}}
+        <br>
+    {% endfor %}
+{% endblock %}
