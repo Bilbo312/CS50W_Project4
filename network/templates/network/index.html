@@ -8,8 +8,27 @@
             <input class="submit-btn" type="submit" value="Submit" style="left: 445px; margin-top: 60px;"/>
         </form>
     </div>
+    
     {% for Post in Posts %}
         {{Post|linebreaks}}
         <br>
     {% endfor %}
+    
+    <div class="pagination">
+        <span class="step-links">
+            {% if Posts.has_previous %}
+                <a href="?page=1">&laquo; first</a>
+                <a href="?page={{ Posts.previous_page_number }}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ Posts.number }} of {{ Posts.paginator.num_pages }}.
+            </span>
+
+            {% if Posts.has_next %}
+                <a href="?page={{ Posts.next_page_number }}">next</a>
+                <a href="?page={{ Posts.paginator.num_pages }}">last &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
 {% endblock %}

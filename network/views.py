@@ -8,6 +8,7 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
+from django.core.paginator import Paginator
 
 from .models import User, Post
 from .forms import NewPostForm
@@ -17,6 +18,11 @@ def index(request):
     form = NewPostForm(request.POST)
     Posts = Post.objects.all()
     Posts = Posts.order_by("-time_created").all()
+    paginator = Paginator(Posts, 10)
+
+    page_number = request.GET.get('page')
+    Posts = paginator.get_page(page_number)
+
     return render(request, "network/index.html", {
         "form": form,
         "Posts": Posts
@@ -168,6 +174,11 @@ def following_posts(request):
     followed_users_2 = list(User.objects.filter(followers = request.user).values_list('username', flat=True))
     Posts = Post.objects.filter(post_creator__in = followed_users)
     Posts = Posts.order_by("-time_created").all()
+
+    paginator = Paginator(Posts, 10)
+
+    page_number = request.GET.get('page')
+    Posts = paginator.get_page(page_number)
     return render(request, "network/following.html", {
         "Posts": Posts,
         "following":followed_users,
