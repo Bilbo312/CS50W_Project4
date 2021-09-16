@@ -9,6 +9,7 @@ class Post(models.Model):
     post_creator = models.ForeignKey(User, on_delete = models.CASCADE)
     time_created = models.DateTimeField(auto_now_add=True)
     content = models.TextField(blank=True, null=True)
+    likes = models.ManyToManyField(User, related_name = 'liked', blank = True)
 
     def __str__(self):
         newline = '\n'

@@ -93,18 +93,12 @@ def create_post(request):
             )
             
             new_post.save()
-            return render(request, "network/index.html", {
-                "form":  NewPostForm()
-            })
+            return redirect("index")
 
         else:
-            return render(request, "network/index.html", {
-                'form': form
-            })
+            return redirect("index")
     else:
-        return render(request, "network/index.html", {
-            'form': NewPostForm()
-        })
+        return redirect("index")
 
 @login_required(login_url = '/login')
 def get_profile(request,username):
@@ -184,3 +178,18 @@ def following_posts(request):
         "following":followed_users,
         "followed_users_2": followed_users_2
     })
+
+@csrf_exempt
+@login_required
+def like(request, post_id, status):
+    if request.method == 'POST':
+        post = Post.objects.get(id = post_id)
+        user = User.objects.get(username = request.user)
+        if status == "like":
+            post.likes.add(user)
+            return JsonResponse({"message": "Post liked successfully."}, status=201)
+        elif status == "unlike":
+            post.likes.remove(user)
+            return JsonResponse({"message": "Post unliked successfully."}, status=201)
+        else: 
+            return JsonResponse({"error": "POST request required."}, status=400)

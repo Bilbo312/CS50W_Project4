@@ -15,8 +15,20 @@
     {% endfor %}
     <br><br>
     {% for Post in Posts %}
-        {{Post|linebreaks}}
-        <br>
+        <div class = "likes">
+            <span id = "likes_{{Post.id}}">{{Post.likes.all.count}}</span> Likes
+            {% if user.is_authenticated %}
+                {% if request.user in Post.likes.all %}
+                    <a class="like_btn" data-id = "{{Post.id}}" href="#a">Unlike</a>
+                {% else %}
+                    <a class="like_btn" data-id = "{{Post.id}}" href="#a">Like</a>
+                {% endif %}
+            {% endif %}
+        </div>
+        <div class = "posts">
+            {{Post|linebreaks}}
+            <br>
+        </div>
     {% endfor %}
     {% if is_user == 0 %}
         <button type = "button" id = "follow_btn">{{btn_text}}</button>
@@ -28,4 +40,5 @@
     <input type="hidden" id="username" value ={{username}} >
     <input type="hidden" id="fol_id" value ={{profile_id}} >
     <script src="{% static 'network/profile.js' %}"></script>
+    <script type="text/javascript" src="{% static 'network/likes.js' %}" ></script>
 {% endblock %}
