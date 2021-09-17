@@ -14,18 +14,25 @@
     <button id="btn" type="button">Try it</button>
 
     {% for Post in Posts %}
-        <div class = "likes">
-            <span id = "likes_{{Post.id}}">{{Post.likes.all.count}}</span> Likes
-            {% if user.is_authenticated %}
-                {% if request.user in Post.likes.all %}
-                    <a class="like_btn" data-id = "{{Post.id}}" href="#a">Unlike</a>
-                {% else %}
-                    <a class="like_btn" data-id = "{{Post.id}}" href="#a">Like</a>
+        <div>
+            <div class = "likes">
+                <span id = "likes_{{Post.id}}">{{Post.likes.all.count}}</span> Likes
+                {% if user.is_authenticated %}
+                    {% if request.user in Post.likes.all %}
+                        <a class="like_btn" data-id = "{{Post.id}}" href="#">Unlike</a>
+                    {% else %}
+                        <a class="like_btn" data-id = "{{Post.id}}" href="#">Like</a>
+                    {% endif %}
                 {% endif %}
-            {% endif %}
-        </div>
-        <div class = "posts">
-            {{Post|linebreaks}}
+            </div>
+            <div class="edit" id="edit_{{Post.id}}">
+                {% if request.user == Post.post_creator %}
+                    <a class="edit_btn" data-id = "{{Post.id}}" href="#">Edit</a>
+                {% endif %}
+            </div>
+            <div class = "posts" id="post_{{Post.id}}">
+                {{Post.content}}
+            </div>
             <br>
         </div>
     {% endfor %}
@@ -51,4 +58,5 @@
     </div>
 
     <script type="text/javascript" src="{% static 'network/likes.js' %}" ></script>
+    <script type="text/javascript" src="{% static 'network/edit.js' %}" ></script>
 {% endblock %}

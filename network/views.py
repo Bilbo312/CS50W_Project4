@@ -193,3 +193,21 @@ def like(request, post_id, status):
             return JsonResponse({"message": "Post unliked successfully."}, status=201)
         else: 
             return JsonResponse({"error": "POST request required."}, status=400)
+
+@csrf_exempt
+@login_required
+def edit(request):
+    if request.method == 'PUT':
+        data = json.loads(request.body)
+        id = int(data['postid'])
+        content = data['content']
+
+        Change_Post = Post.objects.get(id = id)
+        try:
+            Change_Post.content = content
+            Change_Post.save()
+            return JsonResponse({"message": "Post successfully changed."}, status=201)
+        except Exception:
+            return JsonResponse({"error": "Exception raised"}, status=400)
+    else: 
+        return JsonResponse({"error": "PUT request required."}, status=400)
