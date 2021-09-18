@@ -1,11 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // document.getElementById('btn').onclick = function() {
-    //     document.getElementById('example').innerHTML = 'Help'
-    // };
     document.querySelectorAll('.like_btn').forEach(link => {
         link.onclick = () => {
             const post_id = link.dataset.id;
-            // document.getElementById('example').innerHTML = link.innerHTML;
             if(link.innerHTML === "Like")
             {
                 document.querySelector(`#likes_${post_id}`).innerHTML++;

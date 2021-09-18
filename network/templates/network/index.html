@@ -3,41 +3,48 @@
 
 {% block body %}
     <div class="body">
-        <form action="{% url 'create_post'%}" method="post">
-            {% csrf_token %}
-            {{ form.Post_content }}
-            <input class="submit-btn" type="submit" value="Submit" style="left: 445px; margin-top: 60px;"/>
-        </form>
+        <div class="create_post">
+            <h4>New Post</h4>
+            <form action="{% url 'create_post'%}" method="post">
+                {% csrf_token %}
+                {{ form.Post_content }}
+                <input class="submit-btn" id = "new_post_btn" type="submit" value="Submit" />
+            </form>
+        </div>
     </div>
     
-    <p id = "example">Hello there</p>
-    <button id="btn" type="button">Try it</button>
-
-    {% for Post in Posts %}
-        <div>
-            <div class = "likes">
-                <span id = "likes_{{Post.id}}">{{Post.likes.all.count}}</span> Likes
-                {% if user.is_authenticated %}
-                    {% if request.user in Post.likes.all %}
-                        <a class="like_btn" data-id = "{{Post.id}}" href="#">Unlike</a>
-                    {% else %}
-                        <a class="like_btn" data-id = "{{Post.id}}" href="#">Like</a>
-                    {% endif %}
-                {% endif %}
-            </div>
-            <div class="edit" id="edit_{{Post.id}}">
-                {% if request.user == Post.post_creator %}
-                    <a class="edit_btn" data-id = "{{Post.id}}" href="#">Edit</a>
-                {% endif %}
-            </div>
-            <div class = "posts" id="post_{{Post.id}}">
-                {{Post.content}}
-            </div>
-            <br>
-        </div>
-    {% endfor %}
-
+    <div class="striped-border"></div>
     
+    <h4 class="body">All Posts</h4>
+    <div class="all_posts_block">
+        {% for Post in Posts %}
+            <div class="post_block">
+                <div class = "posts" id="post_{{Post.id}}" >
+                    <p>{{Post.content}}</p>
+                    <p><i>Posted by: {{Post.post_creator}} @ {{Post.time_created}}</i></p>
+                </div>
+                <div class="add_ons">
+                    <div class = "likes">
+                        <span id = "likes_{{Post.id}}">{{Post.likes.all.count}}</span> Like(s)
+                        
+                        {% if user.is_authenticated %}
+                            {% if request.user in Post.likes.all %}
+                                <a class="like_btn" data-id = "{{Post.id}}" href="#">Unlike</a>
+                            {% else %}
+                                <a class="like_btn" data-id = "{{Post.id}}" href="#">Like</a>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                    <div class="edit" id="edit_{{Post.id}}">
+                        {% if request.user == Post.post_creator %}
+                            <br>
+                            <a class="edit_btn" data-id = "{{Post.id}}" href="#">Edit</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
     
     <div class="pagination">
         <span class="step-links">

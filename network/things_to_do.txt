@@ -1,1 +1,2 @@
 Message on failure redirecting?
+Edit posts in own page
