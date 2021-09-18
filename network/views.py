@@ -106,6 +106,13 @@ def get_profile(request,username):
     profile_id = User.objects.filter(username = username).get().id
     active_user = request.user
     followers = User.objects.get(username = username).followers.all()
+    following = User.objects.get(username = username).following.all()
+
+    paginator = Paginator(Posts, 10)
+
+    page_number = request.GET.get('page')
+    Posts = paginator.get_page(page_number)
+
     if active_user in followers:
         btn_text = "Unfollow"
     else:
@@ -120,6 +127,7 @@ def get_profile(request,username):
         "Posts": Posts,
         "is_user": is_user,
         "followers": followers,
+        "following": following,
         "btn_text": btn_text,
         "active_user": active_user
     })
@@ -153,6 +161,7 @@ def follow(request, username, action):
     else:
         redirect("") 
 
+@login_required
 def followers(request, username):
     User_1 = User.objects.get(username = username)
     followers = User_1.followers.all()
@@ -165,7 +174,7 @@ def followers(request, username):
 @login_required
 def following_posts(request):
     followed_users = list(User.objects.filter(followers = request.user).values_list('id', flat=True))
-    followed_users_2 = list(User.objects.filter(followers = request.user).values_list('username', flat=True))
+    #followed_users_2 = list(User.objects.filter(followers = request.user).values_list('username', flat=True))
     Posts = Post.objects.filter(post_creator__in = followed_users)
     Posts = Posts.order_by("-time_created").all()
 
@@ -176,7 +185,7 @@ def following_posts(request):
     return render(request, "network/following.html", {
         "Posts": Posts,
         "following":followed_users,
-        "followed_users_2": followed_users_2
+        #"followed_users_2": followed_users_2
     })
 
 @csrf_exempt

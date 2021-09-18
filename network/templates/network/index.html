@@ -21,7 +21,7 @@
             <div class="post_block">
                 <div class = "posts" id="post_{{Post.id}}" >
                     <p>{{Post.content}}</p>
-                    <p><i>Posted by: {{Post.post_creator}} @ {{Post.time_created}}</i></p>
+                    <p><i>Posted by: <a href="{% url 'profile' Post.post_creator %}"><strong>{{ Post.post_creator }}</strong></a> @ {{Post.time_created}}</i></p>
                 </div>
                 <div class="add_ons">
                     <div class = "likes">

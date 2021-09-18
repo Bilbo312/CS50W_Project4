@@ -1,13 +1,38 @@
 {% extends "network/layout.html" %}
+{% load static %}
 
 {% block body %}
-    {{following}}
-    {{followed_users_2}}
 
-    {% for Post in Posts %}
-        {{Post|linebreaks}}
-        <br>
-    {% endfor %}
+    <h4 class="body">All Posts by Followed Users</h4>
+    <div class="all_posts_block">
+        {% for Post in Posts %}
+            <div class="post_block">
+                <div class = "posts" id="post_{{Post.id}}" >
+                    <p>{{Post.content}}</p>
+                    <p><i>Posted by: <a href="{% url 'profile' Post.post_creator %}"><strong>{{ Post.post_creator }}</strong></a> @ {{Post.time_created}}</i></p>
+                </div>
+                <div class="add_ons">
+                    <div class = "likes">
+                        <span id = "likes_{{Post.id}}">{{Post.likes.all.count}}</span> Like(s)
+                        
+                        {% if user.is_authenticated %}
+                            {% if request.user in Post.likes.all %}
+                                <a class="like_btn" data-id = "{{Post.id}}" href="#">Unlike</a>
+                            {% else %}
+                                <a class="like_btn" data-id = "{{Post.id}}" href="#">Like</a>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                    <div class="edit" id="edit_{{Post.id}}">
+                        {% if request.user == Post.post_creator %}
+                            <br>
+                            <a class="edit_btn" data-id = "{{Post.id}}" href="#">Edit</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
 
     <div class="pagination">
         <span class="step-links">
@@ -26,4 +51,8 @@
             {% endif %}
         </span>
     </div>
+
+    <script type="text/javascript" src="{% static 'network/likes.js' %}" ></script>
+    <script type="text/javascript" src="{% static 'network/edit.js' %}" ></script>
+
 {% endblock %}

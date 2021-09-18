@@ -1,44 +1,82 @@
 {% extends "network/layout.html" %}
 {% load static %}
 
-
 {% block body %}
     {{Message}}
-    Profile: {{profile_id}}
-    <br>
-    This is {{username}}'s profile page
-    <br>
-    <b>Followers:</b>
-    {% for follower in followers %}
-        {{follower|linebreaks}}
-        <br>
-    {% endfor %}
-    <br><br>
-    {% for Post in Posts %}
-        <div class = "likes">
-            <span id = "likes_{{Post.id}}">{{Post.likes.all.count}}</span> Likes
-            {% if user.is_authenticated %}
-                {% if request.user in Post.likes.all %}
-                    <a class="like_btn" data-id = "{{Post.id}}" href="#a">Unlike</a>
-                {% else %}
-                    <a class="like_btn" data-id = "{{Post.id}}" href="#a">Like</a>
-                {% endif %}
-            {% endif %}
-        </div>
-        <div class = "posts">
-            {{Post|linebreaks}}
-            <br>
-        </div>
-    {% endfor %}
-    {% if is_user == 0 %}
-        <button type = "button" id = "follow_btn">{{btn_text}}</button>
-    {% endif %}
     
-    {{followers}}
-    {{active_user}}
-    {{btn_text}}
+    <div class="profile_details">
+        <h4>This is {{username}}'s profile page</h4>
+        <br>
+        <b>Followers: {{followers.count}} </b>
+        <br>|
+        
+        {% for follower in followers %}
+            {{follower}} |
+        {% endfor %}
+        
+        {% if is_user == 0 %}
+            <button type = "button" id = "follow_btn">{{btn_text}}</button>
+        {% endif %}
+
+        <br>
+        <b>Following: {{following.count}}</b>
+        <br>|
+        {% for following in following %}
+            {{following}} |
+        {% endfor %}
+    </div>
+    <h4 class="body">All Posts by {{username}} </h4>
+    <div class="all_posts_block">
+        {% for Post in Posts %}
+            <div class="post_block">
+                <div class = "posts" id="post_{{Post.id}}" >
+                    <p>{{Post.content}}</p>
+                    <p><i>Posted by: <a href="{% url 'profile' Post.post_creator %}"><strong>{{ Post.post_creator }}</strong></a> @ {{Post.time_created}}</i></p>
+                </div>
+                <div class="add_ons">
+                    <div class = "likes">
+                        <span id = "likes_{{Post.id}}">{{Post.likes.all.count}}</span> Like(s)
+                        
+                        {% if user.is_authenticated %}
+                            {% if request.user in Post.likes.all %}
+                                <a class="like_btn" data-id = "{{Post.id}}" href="#">Unlike</a>
+                            {% else %}
+                                <a class="like_btn" data-id = "{{Post.id}}" href="#">Like</a>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                    <div class="edit" id="edit_{{Post.id}}">
+                        {% if request.user == Post.post_creator %}
+                            <br>
+                            <a class="edit_btn" data-id = "{{Post.id}}" href="#">Edit</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="pagination">
+        <span class="step-links">
+            {% if Posts.has_previous %}
+                <a href="?page=1">&laquo; first</a>
+                <a href="?page={{ Posts.previous_page_number }}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ Posts.number }} of {{ Posts.paginator.num_pages }}.
+            </span>
+
+            {% if Posts.has_next %}
+                <a href="?page={{ Posts.next_page_number }}">next</a>
+                <a href="?page={{ Posts.paginator.num_pages }}">last &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+    
     <input type="hidden" id="username" value ={{username}} >
     <input type="hidden" id="fol_id" value ={{profile_id}} >
     <script src="{% static 'network/profile.js' %}"></script>
     <script type="text/javascript" src="{% static 'network/likes.js' %}" ></script>
+
 {% endblock %}

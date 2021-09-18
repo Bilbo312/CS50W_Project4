@@ -31,6 +31,15 @@
     width: 85%;
 }
 
+.pagination {
+    margin-left: 1%;
+}
+
+.profile_details {
+    margin-bottom: 30px;
+    margin-left: 1%;
+}
+
 #new_post_btn {
     position: absolute;
     margin-left: 336px;
